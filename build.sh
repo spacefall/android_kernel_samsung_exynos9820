@@ -13,6 +13,7 @@ CONFIGS=(
     "droidspaces-additional.config"
     "docker.config"
     "additional.config"
+    "lto.config"
 )
 ADDITIONAL_BUILD_FLAGS=()
 
