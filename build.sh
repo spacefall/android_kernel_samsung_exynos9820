@@ -11,6 +11,8 @@ CONFIGS=(
     "kernelsu.config"
     "droidspaces.config"
     "droidspaces-additional.config"
+    "docker.config"
+    "additional.config"
 )
 ADDITIONAL_BUILD_FLAGS=()
 
@@ -77,6 +79,16 @@ build_kernel() {
 
 if [[ "$1" == "--clean" ]]; then
     perform_clean true
+    exit 0
+fi
+
+if [[ "$1" == "--menuconfig" ]]; then
+    make O="$OUT" LLVM=1 menuconfig
+    exit 0
+fi
+
+if [[ "$1" == "--nconfig" ]]; then
+    make O="$OUT" LLVM=1 nconfig
     exit 0
 fi
 
