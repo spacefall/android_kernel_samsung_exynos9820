@@ -1,0 +1,55 @@
+name: Build Android Kernel
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          submodules: recursive
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            bc \
+            bison \
+            build-essential \
+            ccache \
+            curl \
+            dwarves \
+            flex \
+            gawk \
+            git \
+            libelf-dev \
+            libssl-dev \
+            lz4 \
+            rsync \
+            unzip \
+            xz-utils \
+            zip \
+            zstd \
+            clang \
+            llvm \
+            lld
+
+      - name: Build kernel
+        run: |
+          set -euo pipefail
+          chmod +x ./build.sh
+          ./build.sh
+
+      - name: Upload kernel artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: kernel-artifacts
+          if-no-files-found: warn
+          path: |
+            AnyKernel/*.zip
