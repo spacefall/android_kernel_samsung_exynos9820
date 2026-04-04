@@ -13,7 +13,9 @@ CONFIGS=(
     "additional.config"
     "lto.config"
 )
-ADDITIONAL_BUILD_FLAGS=()
+ADDITIONAL_BUILD_FLAGS=(
+    "LLVM_IAS=1"
+)
 
 export PATH="$HOME/toolchain/bin:$PATH"
 export ARCH=arm64
