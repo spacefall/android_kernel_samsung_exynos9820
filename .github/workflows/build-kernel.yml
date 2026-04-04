@@ -1,8 +1,13 @@
 name: Build Android Kernel
 
 on:
-  push:
+  push: 
   workflow_dispatch:
+
+env:
+  AOSP_CLANG: clang-r530567
+  # could be main, master or mirror-goog-main-llvm-toolchain-source
+  AOSP_BRANCH: main
 
 jobs:
   build:
@@ -35,10 +40,23 @@ jobs:
             unzip \
             xz-utils \
             zip \
-            zstd \
-            clang \
-            llvm \
-            lld
+            zstd
+
+      - name: Cache toolchain
+        id: toolchain-cache
+        uses: actions/cache@v5
+        with:
+          path: ~/toolchain
+          key: toolchain-cache-${{ env.AOSP_CLANG }}
+
+      - name: Get toolchain
+        if: steps.toolchain-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/toolchain
+          cd ~/toolchain
+          wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/$AOSP_BRANCH/$AOSP_CLANG.tar.gz  
+          tar xvf $AOSP_CLANG.tar.gz
+          rm $AOSP_CLANG.tar.gz
 
       - name: Build kernel
         run: |
