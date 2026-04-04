@@ -5,9 +5,9 @@ on:
   workflow_dispatch:
 
 env:
-  AOSP_CLANG: clang-r530567
+  AOSP_CLANG: clang-r584948
   # could be main, master or mirror-goog-main-llvm-toolchain-source
-  AOSP_BRANCH: main
+  AOSP_BRANCH: mirror-goog-main-llvm-toolchain-source
 
 jobs:
   build:
