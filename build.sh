@@ -13,11 +13,7 @@ CONFIGS=(
     "additional.config"
     "lto.config"
 )
-ADDITIONAL_BUILD_FLAGS=(
-    "CLANG_TRIPLE=aarch64-linux-gnu-"
-    "CROSS_COMPILE=aarch64-linux-android-"
-    "CROSS_COMPILE_COMPAT=arm-linux-androidkernel-"
-)
+ADDITIONAL_BUILD_FLAGS=()
 
 export PATH="$HOME/toolchain/bin:$PATH"
 export ARCH=arm64
