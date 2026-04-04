@@ -4,8 +4,6 @@
 DEVICE="beyondx"
 OUT="out"
 AK3_REPO="https://github.com/spacefall/AnyKernel3.git"
-TOOLCHAIN_DIR="/home/jay/toolchains/clang-21"
-CONFIGS="exynos9820-beyondx_defconfig"
 CONFIGS=(
     "exynos9820-beyondx_defconfig"
     "kernelsu.config"
@@ -15,9 +13,14 @@ CONFIGS=(
     "additional.config"
     "lto.config"
 )
-ADDITIONAL_BUILD_FLAGS=()
+ADDITIONAL_BUILD_FLAGS=(
+    "LLVM_IAS=1"
+    "CLANG_TRIPLE=aarch64-linux-gnu-"
+    "CROSS_COMPILE=aarch64-linux-android-"
+    "CROSS_COMPILE_COMPAT=arm-linux-androidkernel-"
+)
 
-export PATH="$TOOLCHAIN_DIR/bin:$PATH"
+export PATH="$HOME/toolchain/bin:$PATH"
 export ARCH=arm64
 
 if command -v ccache &>/dev/null; then
