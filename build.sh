@@ -15,9 +15,6 @@ CONFIGS=(
 )
 ADDITIONAL_BUILD_FLAGS=(
     "LLVM_IAS=1"
-    "CLANG_TRIPLE=aarch64-linux-gnu-"
-    "CROSS_COMPILE=aarch64-linux-android-"
-    "CROSS_COMPILE_COMPAT=arm-linux-androidkernel-"
 )
 
 export PATH="$HOME/toolchain/bin:$PATH"
