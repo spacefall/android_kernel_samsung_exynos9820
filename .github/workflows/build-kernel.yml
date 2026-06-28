@@ -6,8 +6,7 @@ on:
 
 env:
   AOSP_CLANG: clang-r584948
-  # could be main, master or mirror-goog-main-llvm-toolchain-source
-  AOSP_BRANCH: mirror-goog-main-llvm-toolchain-source
+  CLANG_URL: "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/mirror-goog-main-llvm-toolchain-source/clang-r584948.tar.gz"
 
 jobs:
   build:
@@ -15,48 +14,31 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 1
           submodules: recursive
-
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            bc \
-            bison \
-            build-essential \
-            ccache \
-            curl \
-            dwarves \
-            flex \
-            gawk \
-            git \
-            libelf-dev \
-            libssl-dev \
-            lz4 \
-            rsync \
-            unzip \
-            xz-utils \
-            zip \
-            zstd
+    
+      - name: Update submodules
+        run: git submodule update --remote
 
       - name: Cache toolchain
         id: toolchain-cache
         uses: actions/cache@v5
         with:
           path: ~/toolchain
-          key: toolchain-cache-${{ env.AOSP_CLANG }}
+          key: toolchain-cache-${{ env.CLANG_VERSION }}
 
       - name: Get toolchain
         if: steps.toolchain-cache.outputs.cache-hit != 'true'
         run: |
           mkdir -p ~/toolchain
-          cd ~/toolchain
-          wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/$AOSP_BRANCH/$AOSP_CLANG.tar.gz  
-          tar xvf $AOSP_CLANG.tar.gz
-          rm $AOSP_CLANG.tar.gz
+          wget $CLANG_URL
+          tar xvf $CLANG_VERSION.tar.gz -C ~/toolchain
+          rm $CLANG_VERSION.tar.gz
+
+      - name: Get ccache
+        uses: hendrikmuhs/ccache-action@v1.2.23
 
       - name: Build kernel
         run: |
@@ -67,7 +49,6 @@ jobs:
       - name: Upload kernel artifacts
         uses: actions/upload-artifact@v7
         with:
-          archive: false
           if-no-files-found: warn
           path: |
-            AnyKernel/*.zip
+            pack/boot.img
